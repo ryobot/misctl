@@ -4,7 +4,7 @@
 from ssh import Ssh
 
 ### class Stats ###############
-class Stats():
+class HaproxyStats():
     socket_path = "/var/lib/haproxy/stats"
     ssh = Ssh()
 

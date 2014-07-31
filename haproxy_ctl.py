@@ -10,9 +10,9 @@ import cgi
 import datetime
 
 from service import Service
-from config import Config
-from log import HttpLog
-from stats import Stats
+from haproxy_config import HaproxyConfig
+from haproxy_log import HaproxyHttpLog
+from haproxy_stats import HaproxyStats
 
 ### form params ###
 settingList = ["check", "disabled", "backup"]
@@ -30,7 +30,6 @@ message = ""
 ## request params #########
 form = cgi.FieldStorage()
 req_refresh = "10"
-req_logline = "0"
 req_editServer = "none"
 req_save = False
 req_service_action = "none"
@@ -47,8 +46,6 @@ req_command = "no"
 req_socket_command = ""
 if form.has_key("refresh"):
     req_refresh = form["refresh"].value
-if form.has_key("logline"):
-    req_logline = form["logline"].value
 if form.has_key("editServer"):
     req_editServer = form["editServer"].value
 if form.has_key("addServer"):
@@ -79,8 +76,8 @@ if form.has_key("save") and form["save"].value == "yes":
     req_save = True
 
 ### get config / service ####
-config = Config()
-service = Service()
+config = HaproxyConfig()
+service = Service("haproxy")
 if req_service_action == "stop":
     message += service.stop()
 if req_service_action == "start":
@@ -158,12 +155,10 @@ for sec in config.data.sections:
                 servers.append(backend_name + "/" + p[1])
                 
 ### get new log #########
-httpLog = HttpLog()
-#(req_logline, lastLog) = httpLog.getLog(req_logline, servers)
-#lastLog = getLastLog()
+httpLog = HaproxyHttpLog()
 
 ### get stats ######
-st = Stats()
+st = HaproxyStats()
 socket_output = ""
 if req_socket_command:
     socket_output = st.socketCommand(req_socket_command)
@@ -172,17 +167,14 @@ stats = st.getStats()
 print("Content-Type: text/html;charset=utf-8\n")
 print("<html>")
 print("<head>")
-print("<title>haproxy control</title><link rel='STYLESHEET' href='haproxy.css' type='text/css'>")
+print("<title>haproxy control</title><link rel='STYLESHEET' href='webadmin.css' type='text/css'>")
 print("<script language='javascript' src='haproxy.js' type='text/javascript'></script>")
-#if int(refresh) > 0:
- #   print("<meta http-equiv='refresh' content='" + refresh + "' >")
 print("</head>")
 print("<body onLoad='setRefreshTimerAndScroll(" + req_refresh + "," + req_y_scroll + ")'>")
 
 ### param form ######
 print("<form id='form1' action='haproxy_ctl.py' method='POST'>")
 print("<input type='hidden' name='refresh' value='" + req_refresh + "' />")
-print("<input type='hidden' name='logline' value='" + req_logline + "' />")
 print("<input type='hidden' name='editServer' value='none' />")
 print("<input type='hidden' name='service_action' value='none' />")
 print("<input type='hidden' name='addServer' value='none' />")
@@ -347,7 +339,6 @@ for sec in config.data.sections:
                 print("<form id='form2' action='haproxy_ctl.py' method='POST'>")
                 print("<input type='hidden' name='save' value='yes' />")
                 print("<input type='hidden' name='refresh' value='10' />")
-                print("<input type='hidden' name='logline' value='" + req_logline + "' />")
                 print("<input type='hidden' name='editServer' value='" + req_editServer + "' />")
                 if isUp:
                     print("<td><input name='name' size=8 value='" + name + "' disabled /></td>")
@@ -364,7 +355,6 @@ for sec in config.data.sections:
                 print("<form id='form2' action='haproxy_ctl.py' method='POST'>")
                 print("<input type='hidden' name='save' value='yes' />")
                 print("<input type='hidden' name='refresh' value='10' />")
-                print("<input type='hidden' name='logline' value='" + req_logline + "' />")
                 print("<td><input name='addServer' size=8 value='" + name + "'/></td>")
                 print("<td><input name='ip_port' value='" + ip_port + "'/></td>")
                 print("<td><input name='cookie' size=8 value='" + cookie + "'/></td>")
@@ -422,7 +412,6 @@ else:
     print("<table><tr><td>")
     print("<form id='form3' action='haproxy_ctl.py' method='POST'>")
     print("<input type='hidden' name='refresh' value='0' />")
-    print("<input type='hidden' name='logline' value='" + req_logline + "' />")
     print("<input type='hidden' name='y_scroll' value=0 />")
     print("<input type='hidden' name='command' value='yes' />")
     print("<input type='text' name='socket_command' value='" + req_socket_command + "'/>")

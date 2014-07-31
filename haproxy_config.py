@@ -20,10 +20,10 @@ class haproxy_cfg(object):
     sections = []
 
 ### class Config ###############
-class Config():
+class HaproxyConfig():
     data = haproxy_cfg()
-    cfg_tmp_path = "/home/haproxy_ctl/haproxy.cfg"
-    loadflag_path = "/home/haproxy_ctl/haproxy_ctl_not_config_loaded"
+    cfg_tmp_path = "/home/webadmin/haproxy.cfg"
+    loadflag_path = "/home/webadmin/haproxy_ctl_not_config_loaded"
     ssh = Ssh()
 
     def __init__(self):

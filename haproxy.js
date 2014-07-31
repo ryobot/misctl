@@ -1,3 +1,5 @@
+/* javascripts for haproxy_ctl.py   */
+
 function setRefresh(refresh) {
     form = document.getElementById('form1');
     form.refresh.value = refresh;

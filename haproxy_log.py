@@ -25,7 +25,7 @@ class http_data(object):
     server_data = {}
 
 ### class HttpLog ###############
-class HttpLog():
+class HaproxyHttpLog():
     log_path = "/var/log/haproxy.log"
     ssh = Ssh()
 
@@ -62,7 +62,7 @@ class HttpLog():
         if min < 60:
             return str(min) + " min. ago"
         hour = min/60
-        return str(hour) + "hr ago"
+        return str(hour) + " hr ago"
 
     def getServerLastTimestamp(self, server):
         com = "grep " + server + " " + self.log_path + " | grep HTTP | tail -1"

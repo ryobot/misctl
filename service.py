@@ -13,12 +13,14 @@ from ssh import Ssh
 class Service():
     state = None
     ssh = Ssh()
+    name = None
 
-    def __init__(self):
+    def __init__(self,name):
+       self.name = name
        self. state = self.getStatus()
         
     def getStatus(self):
-        com = "service haproxy status"
+        com = "service " + self.name +" status"
         (ret, content) = self.ssh.command(com)
         if ret == 0:
             return "running"
@@ -27,28 +29,28 @@ class Service():
         return "unknown"
         
     def start(self):
-        com = "service haproxy start"
+        com = "service " + self.name +" start"
         (ret, content) = self.ssh.commandAsRoot(com)
         if ret:
-            self.state = getStatus()
-            return "cannot start haproxy"
+            self.state = self.getStatus()
+            return "cannot start " + self.name +":" + content
         self.state = "running"
         return ""
         
     def stop(self):
-        com = "service haproxy stop"
+        com = "service " + self.name +" stop"
         (ret, content) = self.ssh.commandAsRoot(com)
         if ret:
-            self.state = getStatus()
-            return "cannot stop haproxy"
+            self.state = self.getStatus()
+            return "cannot stop " + self.name +":" + content
         self.state = "stopped"
         return ""
         
     def reload(self):
-        com = "service haproxy reload"
+        com = "service " + self.name +" reload"
         (ret, content) = self.ssh.commandAsRoot(com)
         if ret:
-            self.state = getStatus()
-            return "cannot reload haproxy"
+            self.state = self.getStatus()
+            return "cannot reload " + self.name +":" + content
         self.state = "running"
         return ""
