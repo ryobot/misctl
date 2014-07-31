@@ -1,0 +1,33 @@
+********************************************************
+misctl --- python cgi (with root ssh commands) ---
+for iptables / haproxy / snort / squid ...
+********************************************************
+
+#### setup for CentOS6.4 ######
+
+# yum install httpd
+# vi /etc/httpd/conf/httpd.conf
+----
+Listen 10080
+AddHandler cgi-script .cgi .py
+ServerName localhost:10080
+<Directory "/var/www/html/webadmin">
+    AllowOverride None
+    Options ExecCGI
+    Order allow,deny 
+    Allow from all       ### must be allowed only from the admin client
+</Directory>
+User webadmin
+Group webadmin
+----
+# groupadd webadmin
+# useradd webadmin -g webadmin
+# su webadmin
+$ cd
+$ ssh-keygen
+$ ssh-copy-id root@localhost
+$ ssh root@localhost ls -l
+$ exit
+
+*** copy files to /var/www/html/webadmin
+
