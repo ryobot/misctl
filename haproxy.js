@@ -18,6 +18,7 @@ function toggleDetail() {
 
 function toggleCommand() {
     form = document.getElementById('form1');
+    form.y_scroll.value = document.documentElement.scrollTop || document.body.scrollTop;
     if (form.command.value === "no") {
         form.command.value = "yes";
         form.refresh.value = 0;
@@ -34,8 +35,11 @@ function refresh() {
 }
 
 function socketCommand() {
-    form = document.getElementById('form3');
+    form = document.getElementById('form1');
     form.y_scroll.value = document.documentElement.scrollTop || document.body.scrollTop;
+    form.socket_command.value = form.socket_command_str.value;
+    form.refresh.value = 0;
+    form.command.value = "yes";
     form.submit();
 }
 
@@ -76,8 +80,22 @@ function editWeight(server) {
     form.submit();
 }
 
-function saveServer() {
-    form = document.getElementById('form2');
+function saveServer(server) {
+    form = document.getElementById('form1');
+    form.save.value = "yes";
+    form.refresh.value = 10;
+    form.editServer.value = server;
+    form.name.disabled = false;
+    form.ip_port.disabled = false;
+    form.cookie.disabled = false;
+    form.submit();
+}
+
+function saveAddServer() {
+    form = document.getElementById('form1');
+    form.save.value = "yes";
+    form.refresh.value = 10;
+    form.addServer.value = form.name.value;
     form.submit();
 }
 
@@ -114,7 +132,8 @@ function upServer(name) {
 }
 
 function doEditWeight(name) {
-    form = document.getElementById('form2');
+    form = document.getElementById('form1');
+    form.refresh.value = 10;
     form.socket_command.value = "set weight " + name + " " + form.weightValue.value;
     form.submit();
 }
