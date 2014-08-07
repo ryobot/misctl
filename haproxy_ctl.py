@@ -14,6 +14,7 @@ from haproxy_config import HaproxyConfig
 from haproxy_log import HaproxyHttpLog
 from haproxy_stats import HaproxyStats
 from html_parts import *
+from menu import Menu
 
 ## main
 
@@ -126,6 +127,8 @@ HtmlHead("haproxy control", "webadmin.css", "haproxy.js").render()
 
 print("<body onLoad='setRefreshTimerAndScroll(" + req["refresh"] + "," + req["y_scroll"] + ")'>")
 
+Menu("haproxy").render()
+
 ### form (hidden params) #####
 params = { 
     'refresh':req["refresh"], 'editServer':'none', 'service_action':'none', 'addServer':'none',
@@ -135,11 +138,10 @@ params = {
 HtmlForm("form1", "haproxy_ctl.py", "POST", params).render()
 
 print("<div id='header'>")
-print("<table><tr>")
-print("<td><h2>haproxy コントロール・パネル</h2></td>")
-print("<td><div id='refresh'>refresh : </td>")
-print("<td class='actions' style='text-align:left; margin-top:20px;'>")
-print("<div style='height:7px'>&nbsp;</div>")
+print("<table style='margin-bottom: 0px;'><tr>")
+print("<td style='border: 0;'>haproxy コントロール・パネル</td>")
+print("<td style='border: 0;' style='text-align: right;'>auto refresh : </td>")
+print("<td class='actions' style='text-align:left; border: 0;'>")
 
 ### auto refresh #####
 if int(req["refresh"]) == 5:
@@ -165,13 +167,15 @@ print("</td>")
 # time stamp
 now = datetime.datetime.now()
 timestamp = now.strftime("%d/%b/%Y:%H:%M:%S") + ".%03d" % (now.microsecond / 1000)
-print("<td>last update:<br>" + timestamp + "</td>")
+print("<td style='border: 0;'>last update: " + timestamp + "</td>")
 
 print("</tr></table>")
 print("</div>")
 
-# service
+print("<div id='outer'>")
 print("<div id='container'>")
+
+# service
 if message:
     print message
 print("<table><tr><th width=150>status</th><td width=150>" + service.state + "</td>")
@@ -205,10 +209,8 @@ for sec in config.data.sections:
         print("<tr><th>sessions(max)</th>")
         print("<td>" + stat["scur"] + " (" + stat["smax"] + ")</td></tr>")
         print("</table>")
-print("</div>")
 
 # backends
-print("<div id='container'>")
 for sec in config.data.sections:
     if sec.name == "backend":
         print("<h3>backend : ")
@@ -377,7 +379,8 @@ else:
         print("</tr>")
     print("</table>")
 
-print("</div>")
+print("</div>") #container
+print("</div>") #outer
 
 ### footer ######
 print("<div id='footer'>")
