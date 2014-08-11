@@ -1,0 +1,15 @@
+{
+    "menu_iptables": "ファイアウォール",
+    "menu_haproxy": "ロードバランサ",
+    "menu_snort": "侵入検知",
+    "menu_squid": "Webキャッシュ",
+    "haproxy_title": "Haproxy コントロール・パネル",
+    "auto_refresh": "自動更新 :",
+    "last_update": "最終更新 :",
+    "service_status": "ステータス :",
+    "service_start": "起動",
+    "service_stop": "停止",
+    "service_reload": "リロード",
+    "no_service_message": "サービスの設定、インストールを確認してください。",
+    "need_service_reload_message": "設定が変更されています。サービスをリロードして設定を反映してください。"
+}

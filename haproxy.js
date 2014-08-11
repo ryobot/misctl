@@ -138,3 +138,8 @@ function doEditWeight(name) {
     form.submit();
 }
 
+function langSelect() {
+    form = document.getElementById('form1');
+    form.submit();
+}
+

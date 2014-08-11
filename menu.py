@@ -5,12 +5,12 @@ class Menu():
     items = None
     selected = None
     
-    def __init__(self, select):
+    def __init__(self, select, loc):
         self.items = {}
-        self.items['iptables'] = "ファイアウォール"
-        self.items['haproxy'] = "ロードバランサ"
-        self.items['snort'] = "侵入検知"
-        self.items['squid'] = "Webキャッシュ"
+        self.items['iptables'] = loc.str('menu_iptables')
+        self.items['haproxy'] = loc.str('menu_haproxy')
+        self.items['snort'] = loc.str('menu_snort')
+        self.items['squid'] = loc.str('menu_squid')
         self.selected = select
     
     def render(self):

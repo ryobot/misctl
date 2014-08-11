@@ -15,6 +15,7 @@ from haproxy_log import HaproxyHttpLog
 from haproxy_stats import HaproxyStats
 from html_parts import *
 from menu import Menu
+from localize_string import Localize
 
 ## main
 
@@ -25,11 +26,15 @@ form = cgi.FieldStorage()
 req = {
     'refresh':"10", 'editServer':"none", 'save':"no", 'service_action':"none", 'addServer':"none", 'delServer':"none",
     'weightServer':"none", 'name':"new_server", 'ip_port':"0.0.0.0:80", 'cookie':"new_server", 'settings':"check weight 10",
-    'y_scroll':"0", 'detail':"no", 'command':"no", 'socket_command':""
+    'y_scroll':"0", 'detail':"no", 'command':"no", 'socket_command':"", 'lang':"en"
 }
 for key in req.keys():
     if form.has_key(key):
         req[key] = form[key].value
+
+loc = Localize(req['lang'])
+if loc.message:
+    message = loc.message
 
 ### get config / service ####
 config = HaproxyConfig()
@@ -127,7 +132,7 @@ HtmlHead("haproxy control", "webadmin.css", "haproxy.js").render()
 
 print("<body onLoad='setRefreshTimerAndScroll(" + req["refresh"] + "," + req["y_scroll"] + ")'>")
 
-Menu("haproxy").render()
+Menu("haproxy", loc).render()
 
 ### form (hidden params) #####
 params = { 
@@ -139,8 +144,8 @@ HtmlForm("form1", "haproxy_ctl.py", "POST", params).render()
 
 print("<div id='header'>")
 print("<table style='margin-bottom: 0px;'><tr>")
-print("<td style='border: 0;'>haproxy コントロール・パネル</td>")
-print("<td style='border: 0;' style='text-align: right;'>auto refresh : </td>")
+print("<td style='border: 0;'><h3>"  + loc.str('haproxy_title') + "</h3></td>")
+print("<td style='border: 0;' style='text-align: right;'>" + loc.str('auto_refresh') + "</td>")
 print("<td class='actions' style='text-align:left; border: 0;'>")
 
 ### auto refresh #####
@@ -167,7 +172,19 @@ print("</td>")
 # time stamp
 now = datetime.datetime.now()
 timestamp = now.strftime("%d/%b/%Y:%H:%M:%S") + ".%03d" % (now.microsecond / 1000)
-print("<td style='border: 0;'>last update: " + timestamp + "</td>")
+print("<td style='border: 0;'>" + loc.str('last_update') + timestamp + "</td>")
+
+# language
+print("<td style='border: 0;'><select name='lang' onchange='langSelect()'>")
+if req['lang'] == 'en':
+    print("<option value='en' selected>English</option>")
+else:
+    print("<option value='en'>English</option>")
+if req['lang'] == 'ja':
+    print("<option value='ja' selected>日本語</option>")
+else:
+    print("<option value='ja'>日本語</option>")
+print("</select></td>")
 
 print("</tr></table>")
 print("</div>")
@@ -178,15 +195,15 @@ print("<div id='container'>")
 # service
 if message:
     print message
-print("<table><tr><th width=150>status</th><td width=150>" + service.state + "</td>")
+print("<table><tr><th width=150>" + loc.str('service_status') + "</th><td width=150>" + service.state + "</td>")
 if service.state == "running":
-    print("<td class='actions' style='text-align:left;'><a href='javascript:stop()'>stop</a><a href='javascript:reload()'>reload</a></td>")
+    print("<td class='actions' style='text-align:left;'><a href='javascript:stop()'>" + loc.str('service_stop') + "</a><a href='javascript:reload()'>" + loc.str('service_reload') + "</a></td>")
 elif service.state == "stopped":
-    print("<td class='actions' style='text-align:left;'><a href='javascript:start()'>start</a></td>")
+    print("<td class='actions' style='text-align:left;'><a href='javascript:start()'>" + loc.str('service_start') + "</a></td>")
 else:
-    print("<td>Check haproxy configuration and installation.</td>")    
+    print("<td>" + loc.str('no_service_message') + "</td>")    
 if not config.isLoaded():
-    print "<td>Configuration has been edited. Please reload to activate current configurations.</td>"
+    print "<td>" + loc.str('need_service_reload_message') + "</td>"
 print("</tr></table>")
     
 # frontedns

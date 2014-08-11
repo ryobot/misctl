@@ -1,0 +1,15 @@
+{
+    "menu_iptables": "Firewall",
+    "menu_haproxy": "Load Balancer",
+    "menu_snort": "IDS",
+    "menu_squid": "Web Cache",
+    "haproxy_title": "Haproxy Control Panel",
+    "auto_refresh": "Auto Refresh :",
+    "last_update": "Last Update :",
+    "service_status": "Service Status :",
+    "service_start": "Start",
+    "service_stop": "Stop",
+    "service_reload": "Reload",
+    "no_service_message": "Check service configuration or installation.",
+    "need_service_reload_message": "Configuration has been edited. Please reload to activate current configurations."
+}
