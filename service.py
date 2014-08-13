@@ -1,11 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-#import commands
-#import cgi
 import os
-#import sys
-#import datetime
 
 from ssh import Ssh
 
@@ -17,11 +13,11 @@ class Service():
 
     def __init__(self,name):
        self.name = name
-       self. state = self.getStatus()
+       self.state = self.getStatus()
         
     def getStatus(self):
         com = "service " + self.name +" status"
-        (ret, content) = self.ssh.command(com)
+        (ret, content) = self.ssh.commandAsRoot(com)
         if ret == 0:
             return "running"
         if ret == 3:

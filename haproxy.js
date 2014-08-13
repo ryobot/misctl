@@ -1,39 +1,5 @@
 /* javascripts for haproxy_ctl.py   */
 
-function setRefresh(refresh) {
-    form = document.getElementById('form1');
-    form.refresh.value = refresh;
-    form.submit();
-}
-
-function toggleDetail() {
-    form = document.getElementById('form1');
-    if (form.detail.value === "no") {
-        form.detail.value = "yes";
-    } else {
-        form.detail.value = "no";
-    }
-    form.submit();
-}
-
-function toggleCommand() {
-    form = document.getElementById('form1');
-    form.y_scroll.value = document.documentElement.scrollTop || document.body.scrollTop;
-    if (form.command.value === "no") {
-        form.command.value = "yes";
-        form.refresh.value = 0;
-    } else {
-        form.command.value = "no";
-    }
-    form.submit();
-}
-
-function refresh() {
-    form = document.getElementById('form1');
-    form.y_scroll.value = document.documentElement.scrollTop || document.body.scrollTop;
-    form.submit();
-}
-
 function socketCommand() {
     form = document.getElementById('form1');
     form.y_scroll.value = document.documentElement.scrollTop || document.body.scrollTop;
@@ -41,13 +7,6 @@ function socketCommand() {
     form.refresh.value = 0;
     form.command.value = "yes";
     form.submit();
-}
-
-function setRefreshTimerAndScroll(time, y_scroll) {
-    if (time > 0) {
-        setTimeout('refresh()', 1000*time);
-    }
-    window.scroll(0, y_scroll);
 }
 
 function editServer(server) {
@@ -64,8 +23,8 @@ function addServer() {
     form.submit();
 }
 
-function deleteServer(server) {
-    if (window.confirm("Deleting server " + server + ". OK?")) {
+function deleteServer(server, msg) {
+    if (window.confirm(msg)) {
         form = document.getElementById('form1');
         form.refresh.value = 0;
         form.delServer.value = server;
@@ -99,25 +58,6 @@ function saveAddServer() {
     form.submit();
 }
 
-// service commands:
-function stop() {
-    form = document.getElementById('form1');
-    form.service_action.value = "stop";
-    form.submit();
-}
-
-function start() {
-    form = document.getElementById('form1');
-    form.service_action.value = "start";
-    form.submit();
-}
-
-function reload() {
-    form = document.getElementById('form1');
-    form.service_action.value = "reload";
-    form.submit();
-}
-
 // socket commands:
 function downServer(name) {
     form = document.getElementById('form1');
@@ -137,9 +77,3 @@ function doEditWeight(name) {
     form.socket_command.value = "set weight " + name + " " + form.weightValue.value;
     form.submit();
 }
-
-function langSelect() {
-    form = document.getElementById('form1');
-    form.submit();
-}
-

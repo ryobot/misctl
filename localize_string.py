@@ -4,6 +4,11 @@
 import json
 import codecs
 
+languages = {
+    'en': 'English',
+    'ja': '日本語'
+}
+
 class Localize():
     localize_strs = None
     language = None
@@ -22,4 +27,17 @@ class Localize():
         if self.localize_strs and self.localize_strs.has_key(key):
             return self.localize_strs[key].encode('utf-8')
         return '[Undefined String]'
+    
+    def str_name(self, key, name):
+        if self.localize_strs and self.localize_strs.has_key(key):
+            return self.localize_strs[key].encode('utf-8').replace('NAME', name)
+        return '[Undefined String]'
+    
+    def renderOptions(self):
+        for key, value in languages.items():
+            selected = ""
+            if self.language == key:
+                selected = " selected"
+            print("<option value='" + key + "'" + selected + ">" + value + "</option>")
+
         

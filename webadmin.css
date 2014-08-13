@@ -242,7 +242,7 @@ th a {
 table tr td {
 	padding: 6px;
 	text-align: left;
-	vertical-align: top;
+	//vertical-align: top;
                 font-size:80%;
 	border-bottom:1px solid #ddd;
 }
@@ -605,24 +605,43 @@ input[type=submit]:active,
 .detail_button a {
     width: 0;
     height: 0;
-    border-top: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 10px solid #003d4c;
+    border-top: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #003d4c;
     font-size: 0px;
 }
 .detail_button  a:hover {
-    border-left: 10px solid #55adbc;
+    border-left: 5px solid #55adbc;
 }
 .detail_button_close a {
     width: 0;
     height: 0;
-    border-top: 10px solid #003d4c;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 10px solid transparent;
+    border-top: 5px solid #003d4c;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid transparent;
     font-size: 0px;
 }
 .detail_button_close  a:hover {
-    border-top: 10px solid #55adbc;
+    border-top: 5px solid #55adbc;
+}
+
+table.toggle,
+table.nomargin {
+    margin-bottom: 0;
+}
+table.toggle td {
+    border-bottom: 0;
+    padding: 0px 3px 6px;
+}
+table.toggle td a {
+    text-decoration: none;
+}
+td.triangle {
+    width: 20px;
+    text-align: right;
+}
+td.nobottom {
+    border-bottom: 0;
 }

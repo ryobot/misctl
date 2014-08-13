@@ -4,6 +4,7 @@
 class Menu():
     items = None
     selected = None
+    lang = None
     
     def __init__(self, select, loc):
         self.items = {}
@@ -12,6 +13,7 @@ class Menu():
         self.items['snort'] = loc.str('menu_snort')
         self.items['squid'] = loc.str('menu_squid')
         self.selected = select
+        self.lang = loc.language
     
     def render(self):
         print("<div id='menu_header'>webadmin</div>")
@@ -20,6 +22,6 @@ class Menu():
             if key == self.selected:
                 print("<li class='act'>" +  value + "</li>")
             else:
-                print("<li><a href='" + key + "_ctl.py'>" +  value + "</a></li>")
+                print("<li><a href='" + key + "_ctl.py?lang=" + self.lang + "'>" +  value + "</a></li>")
         print("</ul></div>")
         
