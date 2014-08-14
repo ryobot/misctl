@@ -31,3 +31,6 @@ $ exit
 
 *** copy files to /var/www/html/webadmin
 
+# chown -R webadmin:webadmin /var/www/html/webadmin
+# cd /var/www/html/webadmin
+# chmod 755 *_ctl.py

@@ -31,7 +31,7 @@ if loc.message:
     message = loc.message
 
 ### service ####
-service = Service("iptables")
+service = Service("snort")
 if req["service_action"] == "stop":
     message += service.stop()
 if req["service_action"] == "start":
@@ -42,21 +42,21 @@ if req["service_action"] == "reload":
 ### render html #####
 
 ### <html><head>--</head> ####
-renderHead(loc.str('menu_iptables'), "", "")
+renderHead(loc.str('menu_snort'), "", "")
 
 print("<body onLoad='setRefreshTimerAndScroll(" + req["refresh"] + "," + req["y_scroll"] + ")'>")
 
-Menu("iptables", loc).render()
+Menu("snort", loc).render()
 
 ### form (hidden params) #####
 params = { 
     'refresh':req["refresh"], 'y_scroll':'0'
 }
-HtmlForm("form1", "iptables_ctl.py", "POST", params).render()
+HtmlForm("form1", "snort_ctl.py", "POST", params).render()
 
 print("<div id='header'>")
 print("<table style='margin-bottom: 0px;'><tr>")
-print("<td style='border: 0;'><h3>"  + loc.str('iptables_title') + "</h3></td>")
+print("<td style='border: 0;'><h3>"  + loc.str('snort_title') + "</h3></td>")
 
 ### auto refresh #####
 print("<td style='border: 0;' style='text-align: right;'>" + loc.str('auto_refresh') + "</td>")
@@ -85,14 +85,15 @@ if message:
     print message
 
 # service
-renderService(service, loc, "")
-
+msg = ""
+renderService(service, loc, msg)
+    
 print("</div>") #container
 print("</div>") #outer
 
 ### footer ######
 print("<div id='footer'>")
-print("webadmin : " + loc.str('iptables_title'))
+print("webadmin : " + loc.str('snort_title'))
 print("</div>")
 
 print("</form>")

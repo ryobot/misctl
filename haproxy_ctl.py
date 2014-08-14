@@ -128,7 +128,7 @@ stats = st.getStats()
 ### render html #####
 
 ### <head>--</head> ####
-HtmlHead(loc.str('menu_haproxy'), "", "haproxy.js").render()
+renderHead(loc.str('menu_haproxy'), "", "haproxy.js")
 
 print("<body onLoad='setRefreshTimerAndScroll(" + req["refresh"] + "," + req["y_scroll"] + ")'>")
 
@@ -144,28 +144,11 @@ HtmlForm("form1", "haproxy_ctl.py", "POST", params).render()
 print("<div id='header'>")
 print("<table style='margin-bottom: 0px;'><tr>")
 print("<td style='border: 0;'><h3>"  + loc.str('haproxy_title') + "</h3></td>")
-print("<td style='border: 0;' style='text-align: right;'>" + loc.str('auto_refresh') + "</td>")
-print("<td class='actions' style='text-align:left; border: 0;'>")
 
 ### auto refresh #####
-if int(req["refresh"]) == 5:
-    print("<span>5</span>")
-else:
-    print("<a href='javascript:setRefresh(5)'>5</a>")
-if int(req["refresh"]) == 10:
-    print("<span>10</span>")
-else:
-    print("<a href='javascript:setRefresh(10)'>10</a>")
-if int(req["refresh"]) == 30:
-    print("<span>30</span>")
-else:
-    print("<a href='javascript:setRefresh(30)'>30</a>")
-if int(req["refresh"]) == 0:
-    print("<span>off</span>")
-else:
-    print("<a href='javascript:setRefresh(0)'>off</a>")
-print("<a href='javascript:refresh()'>refresh</a>")
-
+print("<td style='border: 0;' style='text-align: right;'>" + loc.str('auto_refresh') + "</td>")
+print("<td class='actions' style='text-align:left; border: 0;'>")
+renderAutoRefresh([5,10,30], req["refresh"], loc)
 print("</td>")
 
 # time stamp
@@ -184,19 +167,14 @@ print("</div>")
 print("<div id='outer'>")
 print("<div id='container'>")
 
-# service
 if message:
     print message
-print("<table><tr><th width=150>" + loc.str('service_status') + "</th><td width=150>" + service.state + "</td>")
-if service.state == "running":
-    print("<td class='actions' style='text-align:left;'><a href='javascript:stop()'>" + loc.str('service_stop') + "</a><a href='javascript:reload()'>" + loc.str('service_reload') + "</a></td>")
-elif service.state == "stopped":
-    print("<td class='actions' style='text-align:left;'><a href='javascript:start()'>" + loc.str('service_start') + "</a></td>")
-else:
-    print("<td>" + loc.str('no_service_message') + "</td>")    
+
+# service
+msg = ""
 if not config.isLoaded():
-    print "<td>" + loc.str('need_service_reload_message') + "</td>"
-print("</tr></table>")
+    msg = loc.str('need_service_reload_message')
+renderService(service, loc, msg)
     
 # frontedns
 for sec in config.data.sections:

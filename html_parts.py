@@ -1,28 +1,22 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-class HtmlHead():
-    title = None
-    css = None
-    js = None
-    
-    def __init__(self, title, css, js):
-        self.title = title
-        self.css = css
-        self.js = js
-    
-    def render(self):
-        print("Content-Type: text/html;charset=utf-8\n")
-        print("<html>")
-        print("<head>")
-        print("<title>" + self.title + " - webadmin</title>")
-        print("<link rel='STYLESHEET' href='webadmin.css' type='text/css'>")
-        if self.css:
-            print("<link rel='STYLESHEET' href='" + self.css + "' type='text/css'>")
-        print("<script language='javascript' src='common.js' type='text/javascript'></script>")
-        if self.js:
-            print("<script language='javascript' src='" + self.js + "' type='text/javascript'></script>")
-        print("</head>")
+def renderHead(title, css, js):
+    print("Content-Type: text/html;charset=utf-8\n")
+    print("<html>")
+    print("<head>")
+    print("<title>" + title + " - webadmin</title>")
+    # common css
+    print("<link rel='STYLESHEET' href='webadmin.css' type='text/css'>")
+    # additional css
+    if css:
+        print("<link rel='STYLESHEET' href='" + css + "' type='text/css'>")
+    # common js
+    print("<script language='javascript' src='common.js' type='text/javascript'></script>")
+    # additional js
+    if js:
+        print("<script language='javascript' src='" + js + "' type='text/javascript'></script>")
+    print("</head>")
 
 class HtmlForm():
     action = None
@@ -52,6 +46,33 @@ class HtmlForm():
 # misc utils
 def renderVSpace(pixel):
     print("<div style='height:" + str(pixel) + "px;'>&nbsp;</div>")
+
+def renderAutoRefresh(intervals, req, loc):
+    for interval in intervals:
+        if int(req) == interval:
+            print("<span>" + str(interval) + "</span>")
+        else:
+            print("<a href='javascript:setRefresh(" + str(interval) + ")'>" + str(interval) + "</a>")
+    if int(req) == 0:
+        print("<span>off</span>")
+    else:
+        print("<a href='javascript:setRefresh(0)'>off</a>")
+    print("<a href='javascript:refresh()'>" + loc.str('refresh') + "</a>")
+
+def renderService(service, loc, message):
+    color = "green"
+    if service.state != "running":
+        color = "red"
+    print("<table><tr><th width=150>" + loc.str('service_status') + "</th><td width=150><font color=" + color + ">" + service.state + "</font></td>")
+    if service.state == "running":
+        print("<td class='actions' style='text-align:left;'><a href='javascript:stop()'>" + loc.str('service_stop') + "</a><a href='javascript:reload()'>" + loc.str('service_reload') + "</a></td>")
+    elif service.state == "stopped":
+        print("<td class='actions' style='text-align:left;'><a href='javascript:start()'>" + loc.str('service_start') + "</a></td>")
+    else:
+        print("<td>" + loc.str('no_service_message') + "</td>")    
+    if message:
+        print "<td>" + message + "</td>"
+    print("</tr></table>")
 
 def renderToggleDivStart(name, label, form):
     openfunc = 'javascript:toggleDisplay("' + name + '", "open")'
