@@ -74,10 +74,13 @@ def renderService(service, loc, message):
         print "<td>" + message + "</td>"
     print("</tr></table>")
 
-def renderToggleDivStart(name, label, form):
+def renderToggleDivStart(name, label, form, default="close"):
     openfunc = 'javascript:toggleDisplay("' + name + '", "open")'
     closefunc = 'javascript:toggleDisplay("' + name + '", "close")'
-    if form.has_key(name + '_div') and form[name + '_div'].value == "open":
+    state = default
+    if form.has_key(name + '_div'):
+       state =  form[name + '_div'].value
+    if state == "open":
         print("<div id='" + name + "_close' style='display:none;'><table class='toggle'><tr><td class='triangle'><div class='detail_button'><a href='" + openfunc + "'></a></div></td><td><a href='" + openfunc + "'>" + label + "</a></td></tr></table></div>")
         print("<div id='" + name + "_open'><table class='toggle'><tr><td class='triangle'><div class='detail_button_close'><a href='" + closefunc + "'></a></div></td><td><a href='" + closefunc + "'>" + label + "</a></td></tr></table>")
         print("<input type='hidden' name='" + name + "_div' value='open' />")

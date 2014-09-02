@@ -13,6 +13,8 @@ from html_parts import *
 from menu import Menu
 from localize_string import Localize
 
+from iptables_stats import IptablesStats
+
 ## main
 
 message = ""
@@ -86,6 +88,33 @@ if message:
 
 # service
 renderService(service, loc, "")
+
+stats = IptablesStats(service.getMessage())
+
+if service.state == "running":
+    for tablename, table in stats.tables.items():
+        renderVSpace(10)
+        toggleDefault = "close"
+        if tablename == "filter":
+            toggleDefault = "open"
+        renderToggleDivStart("table_" + tablename, "Table: " + tablename, form, toggleDefault)
+        for chainname, chain in table.chains.items():
+            print("<table class='notstripe'><tr><td>Chain: " + chainname + " policy " + chain.policy + "</td></tr>")
+            if chain.rules:
+                print("<tr><td style='border-bottom: 0;'><table class='stripe'>")
+                for rule in chain.rules:
+                    print("<tr>")
+                    print("<td>" + rule.num + "</td>")
+                    print("<td>" + rule.target + "</td>")
+                    print("<td>" + rule.prot + "</td>")
+                    print("<td>" + rule.opt + "</td>")
+                    print("<td>" + rule.source + "</td>")
+                    print("<td>" + rule.destination + "</td>")
+                    print("<td>" + rule.misc + "</td>")
+                    print("</tr>")
+                print("</table></td></tr>")
+            print("</table>")
+        print("</div>") #end of toggle div:
 
 print("</div>") #container
 print("</div>") #outer

@@ -10,6 +10,7 @@ class Service():
     state = None
     ssh = Ssh()
     name = None
+    content = None
 
     def __init__(self,name):
        self.name = name
@@ -17,7 +18,7 @@ class Service():
         
     def getStatus(self):
         com = "service " + self.name +" status"
-        (ret, content) = self.ssh.commandAsRoot(com)
+        (ret, self.content) = self.ssh.commandAsRoot(com)
         if ret == 0:
             return "running"
         if ret == 3:
@@ -26,7 +27,7 @@ class Service():
         
     def start(self):
         com = "service " + self.name +" start"
-        (ret, content) = self.ssh.commandAsRoot(com)
+        (ret, self.content) = self.ssh.commandAsRoot(com)
         if ret:
             self.state = self.getStatus()
             return "cannot start " + self.name +":" + content
@@ -35,7 +36,7 @@ class Service():
         
     def stop(self):
         com = "service " + self.name +" stop"
-        (ret, content) = self.ssh.commandAsRoot(com)
+        (ret, self.content) = self.ssh.commandAsRoot(com)
         if ret:
             self.state = self.getStatus()
             return "cannot stop " + self.name +":" + content
@@ -44,9 +45,12 @@ class Service():
         
     def reload(self):
         com = "service " + self.name +" reload"
-        (ret, content) = self.ssh.commandAsRoot(com)
+        (ret, self.content) = self.ssh.commandAsRoot(com)
         if ret:
             self.state = self.getStatus()
             return "cannot reload " + self.name +":" + content
         self.state = "running"
         return ""
+    
+    def getMessage(self):
+        return self.content

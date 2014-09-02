@@ -261,6 +261,19 @@ table.server tr td {
 	text-align: center;
 }
 
+table.notstripe {
+    margin-bottom: 0;
+}
+table.notstripe tr {
+    background: #fff;
+}
+table.stripe {
+    margin-bottom: 0;
+}
+table.stripe tr:nth-child(odd) {
+    background: #f9f9f9;
+}
+
 /** Scaffold View **/
 dl {
 	line-height: 2em;
