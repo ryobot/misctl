@@ -8,22 +8,24 @@ from ssh import Ssh
 ### class service ######
 class Service():
     state = None
-    ssh = Ssh()
+    ssh = None
     name = None
     content = None
 
-    def __init__(self,name):
+    def __init__(self,name,host):
        self.name = name
+       self.ssh = Ssh(host)
        self.state = self.getStatus()
         
     def getStatus(self):
         com = "service " + self.name +" status"
         (ret, self.content) = self.ssh.commandAsRoot(com)
+        ret = ret >> 8;
         if ret == 0:
             return "running"
         if ret == 3:
             return "stopped"
-        return "unknown"
+        return "unknown :" + str(ret)
         
     def start(self):
         com = "service " + self.name +" start"

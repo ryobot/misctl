@@ -27,7 +27,10 @@ class http_data(object):
 ### class HttpLog ###############
 class HaproxyHttpLog():
     log_path = "/var/log/haproxy.log"
-    ssh = Ssh()
+    ssh = None
+    
+    def __init__(self,host):
+        self.ssh = Ssh(host)
 
     def getLogLineCount(self):
         com = "wc -l " + self.log_path
@@ -66,7 +69,7 @@ class HaproxyHttpLog():
 
     def getServerLastTimestamp(self, server):
         com = "grep " + server + " " + self.log_path + " | grep HTTP | tail -1"
-        (ret,content) = self.ssh.command(com)
+        (ret,content) = self.ssh.commandAsRoot(com)
         timestamp = "N/A"
         if ret == 0 and content:
             columns = content.splitlines()[0].strip().split()

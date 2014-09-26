@@ -20,7 +20,7 @@ message = ""
 ## request params #########
 form = cgi.FieldStorage()
 req = {
-    'refresh':"0", 'service_action':"none" ,'y_scroll':"0", 'lang':"en"
+    'refresh':"0", 'service_action':"none" ,'y_scroll':"0", 'lang':"en", 'tab_id' : "0", 'host': "localhost"
 }
 for key in req.keys():
     if form.has_key(key):
@@ -31,7 +31,7 @@ if loc.message:
     message = loc.message
 
 ### service ####
-service = Service("snort")
+service = Service("snort", req['host'])
 if req["service_action"] == "stop":
     message += service.stop()
 if req["service_action"] == "start":
@@ -46,7 +46,7 @@ renderHead(loc.str('menu_snort'), "", "")
 
 print("<body onLoad='setRefreshTimerAndScroll(" + req["refresh"] + "," + req["y_scroll"] + ")'>")
 
-Menu("snort", loc).render()
+Menu(req['tab_id'], loc).render()
 
 ### form (hidden params) #####
 params = { 
@@ -56,7 +56,7 @@ HtmlForm("form1", "snort_ctl.py", "POST", params).render()
 
 print("<div id='header'>")
 print("<table style='margin-bottom: 0px;'><tr>")
-print("<td style='border: 0;'><h3>"  + loc.str('snort_title') + "</h3></td>")
+print("<td style='border: 0;'><h3>"  + loc.str('snort_title') + "(" + req['host'] + ")</h3></td>")
 
 ### auto refresh #####
 print("<td style='border: 0;' style='text-align: right;'>" + loc.str('auto_refresh') + "</td>")

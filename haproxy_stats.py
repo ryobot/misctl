@@ -6,7 +6,10 @@ from ssh import Ssh
 ### class Stats ###############
 class HaproxyStats():
     socket_path = "/var/lib/haproxy/stats"
-    ssh = Ssh()
+    ssh = None
+    
+    def __init__(self,host):
+        self.ssh = Ssh(host)
 
     def getStats(self):
         stats = {}

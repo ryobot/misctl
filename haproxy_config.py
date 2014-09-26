@@ -22,20 +22,21 @@ class haproxy_cfg(object):
 ### class Config ###############
 class HaproxyConfig():
     data = haproxy_cfg()
-    cfg_tmp_path = "/home/webadmin/haproxy.cfg"
-    loadflag_path = "/home/webadmin/haproxy_ctl_not_config_loaded"
-    ssh = Ssh()
+    cfg_tmp_path = "/etc/haproxy/haproxy_tmp.cfg"
+    loadflag_path = "/etc/haproxy/haproxy_ctl_not_config_loaded"
+    ssh = None
 
-    def __init__(self):
+    def __init__(self,host):
+        self.ssh = Ssh(host)
         self.data = self.load()
 
     def setLoaded(self,loaded):
         if loaded and not self.isLoaded():
             com = "rm -f " + self.loadflag_path
-            self.ssh.command(com)
+            self.ssh.commandAsRoot(com)
         if not loaded and self.isLoaded():
             com = "touch " + self.loadflag_path
-            self.ssh.command(com)
+            self.ssh.commandAsRoot(com)
     
     def isLoaded(self):
         if os.path.exists(self.loadflag_path):
@@ -78,20 +79,20 @@ class HaproxyConfig():
     def load(self):
         cfg = haproxy_cfg()
         com = "cat " + cfg.cfg_path
-        (ret,content) = self.ssh.command(com)
+        (ret,content) = self.ssh.commandAsRoot(com)
         if ret == 0:
             cfg.sections = self.getSections(content)
         return cfg
     
     def writeConf(self, line):
         com = "echo '" + line + "' >>" + self.cfg_tmp_path
-        self.ssh.command(com)
+        self.ssh.commandAsRoot(com)
 
     def save(self):
         if not self.data.edit:
             return "edit flag not set"
         com = "echo '# config written by haproxy_ctl' > " + self.cfg_tmp_path
-        self.ssh.command(com)
+        self.ssh.commandAsRoot(com)
         for s in self.data.sections:
             line = s.name
             for a in s.attributes:
