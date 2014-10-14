@@ -28,9 +28,12 @@ class Localize():
             return self.localize_strs[key].encode('utf-8')
         return '[Undefined String]'
     
-    def str_name(self, key, name):
+    def str_name(self, key, name, host=""):
         if self.localize_strs and self.localize_strs.has_key(key):
-            return self.localize_strs[key].encode('utf-8').replace('NAME', name)
+            ret_str = self.localize_strs[key].encode('utf-8').replace('NAME', name)
+            if host:
+                ret_str = ret_str.replace('HOST', host)
+            return ret_str
         return '[Undefined String]'
     
     def renderOptions(self):

@@ -52,7 +52,7 @@ Menu(req['tab_id'], loc).render()
 
 ### form (hidden params) #####
 params = { 
-    'refresh':req["refresh"], 'y_scroll':'0'
+    'refresh':req["refresh"], 'y_scroll':'0', 'tab_id': req['tab_id']
 }
 HtmlForm("form1", "iptables_ctl.py", "POST", params).render()
 

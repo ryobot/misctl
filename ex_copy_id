@@ -1,0 +1,19 @@
+#!/bin/sh
+
+HOST=$1
+PASSWORD=$2
+
+sed -i -e "/$HOST/d" ~/.ssh/known_hosts
+
+expect -c "
+set timeout 10
+log_file expect.log
+spawn ssh-copy-id -i /home/webadmin/.ssh/id_rsa.pub root@$HOST
+expect \"(yes/no)?\"
+send \"yes\r\"
+expect \"Password:\"
+send \"$PASSWORD\r\"
+expect \"]\$\"
+"
+echo "login test:"
+ssh -o BatchMode=yes root@$HOST ls -l

@@ -25,12 +25,17 @@ Group webadmin
 # su webadmin
 $ cd
 $ ssh-keygen
-$ ssh-copy-id root@localhost
-$ ssh root@localhost ls -l
 $ exit
 
-*** copy files to /var/www/html/webadmin
+*** copy ex_copy_id to /home/webadmin
+
+# chown webadmin:webadmin /home/webadmin/ex_copy_id
+# chmod 755 /home/webadmin/ex_copy_id
+
+*** copy other files to /var/www/html/webadmin
 
 # chown -R webadmin:webadmin /var/www/html/webadmin
 # cd /var/www/html/webadmin
 # chmod 755 *_ctl.py
+
+Then setup from http://[hostname]/webadmin_config.py

@@ -42,7 +42,7 @@ if req["service_action"] == "reload":
 ### render html #####
 
 ### <html><head>--</head> ####
-renderHead(loc.str('squid_iptables'), "", "")
+renderHead(loc.str('menu_squid'), "", "")
 
 print("<body onLoad='setRefreshTimerAndScroll(" + req["refresh"] + "," + req["y_scroll"] + ")'>")
 
@@ -50,7 +50,7 @@ Menu(req['tab_id'], loc).render()
 
 ### form (hidden params) #####
 params = { 
-    'refresh':req["refresh"], 'y_scroll':'0'
+    'refresh':req["refresh"], 'y_scroll':'0', 'tab_id': req['tab_id']
 }
 HtmlForm("form1", "squid_ctl.py", "POST", params).render()
 

@@ -24,7 +24,7 @@ message = ""
 ## request params #########
 form = cgi.FieldStorage()
 req = {
-    'refresh':"10", 'editServer':"none", 'save':"no", 'service_action':"none", 'addServer':"none", 'delServer':"none",
+    'refresh':"0", 'editServer':"none", 'save':"no", 'service_action':"none", 'addServer':"none", 'delServer':"none",
     'weightServer':"none", 'name':"new_server", 'ip_port':"0.0.0.0:80", 'cookie':"new_server", 'settings':"check weight 10",
     'y_scroll':"0", 'socket_command':"", 'lang':"en", 'tab_id' : "0", 'host':"localhost"
 }
@@ -140,7 +140,7 @@ Menu(req['tab_id'], loc).render()
 params = { 
     'refresh':req["refresh"], 'editServer':'none', 'service_action':'none', 'addServer':'none',
     'delServer':'none', 'weightServer':'none', 'y_scroll':'0', 'socket_command':'', 'save':'no',
-    'host':req['host'], 'tag_id':req['tab_id']
+    'host':req['host'], 'tab_id':req['tab_id']
 }
 HtmlForm("form1", "haproxy_ctl.py", "POST", params).render()
 

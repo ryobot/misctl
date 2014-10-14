@@ -9,6 +9,7 @@ class CtlItem():
     service = ""
     host = ""
     label = ""
+    auth_check = "Not Ckecked"
 
 class Menu():
     items = None
@@ -16,11 +17,19 @@ class Menu():
     lang = None
     config_path = "/home/webadmin/misctl.conf"
     ssh = Ssh()
+    config_label = ""
     
     def __init__(self, select, loc):
         self.load()
+        labels = []
         for item in self.items:
-            item.label = loc.str('menu_' + item.service);
+            item.label = loc.str('menu_' + item.service)
+            cnt = 2
+            while item.label in labels:
+                item.label = loc.str('menu_' + item.service) + str(cnt)
+                cnt += 1
+            labels.append(item.label)
+        self.config_label = loc.str('menu_config')
         self.selected = int(select)
         self.lang = loc.language
     
@@ -29,6 +38,14 @@ class Menu():
         (ret,content) = self.ssh.localCommand(com)
         if ret == 0:
             self.items = self.getCtls(content)
+
+    def save(self):
+        com = "echo '## CTL [service] [host]' > " + self.config_path
+        self.ssh.localCommand(com)
+        for item in self.items:
+            str = "CTL " + item.service + " " + item.host
+            com = "echo '" + str +"' >> " + self.config_path 
+            self.ssh.localCommand(com)
 
     def getCtls(self, conf):
         lines = conf.splitlines()
@@ -54,6 +71,17 @@ class Menu():
             if i == self.selected:
                 print("<li class='act'>" +  item.label + "</li>")
             else:
-                print("<li><a href='" + item.service + "_ctl.py?lang=" + self.lang + "&host=" + item.host + "&tab_id=" + str(i) + "'>" +  item.label + "</a></li>")
+                print("<li><a href='" + item.service + "_ctl.py?lang=" + self.lang + "&host=" + item.host + "&tab_id=" + str(i) + "' title='" + item.service + ":" + item.host + "'>" +  item.label + "</a></li>")
+        # config tab:
+        if self.selected == -1:
+            print("<li class='act'>" +  self.config_label + "</li>")
+        else:
+            print("<li><a href='webadmin_config.py?lang=" + self.lang + "&tab_id=-1' >" +  self.config_label + "</a></li>")
         print("</ul></div>")
-        
+
+    def sshAuthCheck(self):
+        for item in self.items:
+            if Ssh(item.host).isAuthenticated():
+                item.auth_check = "OK"
+            else:
+                item.auth_check = "Not Authenticated"
