@@ -10,12 +10,10 @@ class Ssh():
     def __init__(self, host="localhost"):
         self.host = host
         
-    def isAuthenticated(self):
+    def checkConnection(self):
         com = "ssh -o BatchMode=yes root@" + self.host + " ls"
         ret_ch = commands.getstatusoutput(com)
-        if ret_ch[0] == 0:
-            return True
-        return False
+        return (ret_ch[0], ret_ch[1])
     
     def doAuth(self, password):
         com = self.copy_id_script + " " + self.host + " " + password

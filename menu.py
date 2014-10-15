@@ -81,7 +81,14 @@ class Menu():
 
     def sshAuthCheck(self):
         for item in self.items:
-            if Ssh(item.host).isAuthenticated():
+            (ret, msg) = Ssh(item.host).checkConnection()
+            if ret == 0:
                 item.auth_check = "OK"
             else:
-                item.auth_check = "Not Authenticated"
+                if "No route" in msg:
+                    item.auth_check = "No route to host"
+                elif "Host key" in msg:
+                    item.auth_check = "Not Authenticated"
+                else:
+                    item.auth_check = msg
+                    

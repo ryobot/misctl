@@ -16,7 +16,8 @@ function deleteService(service_id, msg) {
 }
 
 function doAuth(service_id, msg) {
-    pass = window.prompt(msg, "");
+    options = "dialogLeft=200;dialogTop=200;dialogWidth=400;dialogHeight=150;center=1;status=0;scroll=0;resizable=0;minimize=0;maximize=0;";
+    pass = window.showModalDialog("auth.html", msg, options);
     if ( pass ) {
         form = document.getElementById('form1');
         form.config_action.value = "do_auth";

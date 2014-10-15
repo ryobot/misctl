@@ -5,7 +5,7 @@ for iptables / haproxy / snort / squid ...
 
 #### setup for CentOS6.4 ######
 
-# yum install httpd
+# yum install httpd expect
 # vi /etc/httpd/conf/httpd.conf
 ----
 Listen 10080
@@ -37,5 +37,6 @@ $ exit
 # chown -R webadmin:webadmin /var/www/html/webadmin
 # cd /var/www/html/webadmin
 # chmod 755 *_ctl.py
+# chmod 755 webadmin_config.py
 
 Then setup from http://[hostname]/webadmin_config.py

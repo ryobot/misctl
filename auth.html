@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+<script type="text/javascript">
+
+   function setParams() {
+      msg = window.dialogArguments;
+      document.getElementById("message").innerHTML = msg;
+   }
+
+   function returnParams() {
+      window.returnValue = document.getElementById("passwd").value;
+      window.close();
+   }
+
+   function cancel() {
+      window.close();
+   }
+
+</script>
+<title>auth</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body onload="setParams()" style="background: #ccccee;">
+        <div style="padding: 20px;">
+            <span id="message">Message:</span>
+            <p><input type="password" id="passwd"/></p>
+            <button onclick="returnParams()">OK</button>
+            <button onclick="cancel()">Cancel</button>
+        </div>
+    </body>
+</html>

@@ -98,14 +98,19 @@ for i in range(0, len(menu.items)):
     print("<tr>")
     print("<td>" + item.label + "</td><td>" + item.service + "</td><td>" + item.host + "</td>")
     if item.auth_check == "Not Authenticated":
-        print("<td class='actions'><b><font color=red>" + item.auth_check + "</font></b> <a href='javascript:doAuth(" + str(i) + ', "' + loc.str_name('ssh_auth_message', item.host) + '"' + ")'>ssh 認証</a></td>")
+        print("<td class='actions'><b><font color=red>" + item.auth_check + "</font></b> <a href='javascript:doAuth(" + str(i) + ', "' + loc.str_name('ssh_auth_message', item.host) + '"' + ")'>" + loc.str('ssh_auth') + "</a></td>")
     else:
-        print("<td><b><font color=green>" + item.auth_check + "</font></b></td>")
+        if item.auth_check == "OK":
+            print("<td><b><font color=green>" + item.auth_check + "</font></b></td>")
+        else:
+            print("<td><b><font color=gray>" + item.auth_check + "</font></b></td>")
     print("<td class='actions' style='text-align: left;'><a href='javascript:deleteService(" + str(i) + ', "' + loc.str_name('delete_service_message', item.service, item.host) + '"' + ")'>" + loc.str('btn_delete') + "</a></td>")
     print("</tr>" )
+if len(menu.items) == 0:
+    print("<tr><td colspan=5>" + loc.str('no_cp_msg') + "</td></tr>")
 print("</table>")
 
-print("<h1>Add Service</h1>")
+print("<h1>" + loc.str('add_cp') + "</h1>")
 print("<table class='notfull'>")
 print("<tr><th width=200>" + loc.str("Service") + "</th><td width=200><select name='service'>")
 print("<option value='iptables'>" + loc.str("menu_iptables") + "(iptables)</option>")
@@ -114,7 +119,7 @@ print("<option value='snort'>" + loc.str("menu_snort") + "(snort)</option>")
 print("<option value='squid'>" + loc.str("menu_squid") + "(squid)</option>")
 print("</select></td></tr>")
 print("<tr><th>" + loc.str("Host") + "</th><td><input type='text' name='host' size=20></td></tr>")
-print("<tr><td class='actions' style='border: 0px; text-align: left;'><a href='javascript:addService()'>Add Service</a></td></tr>")
+print("<tr><td class='actions' style='border: 0px; text-align: left;'><a href='javascript:addService()'>" + loc.str('btn_add') + "</a></td></tr>")
 print("</table>")
 
 print("</div>") #container

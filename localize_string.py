@@ -16,7 +16,7 @@ class Localize():
     
     def __init__(self, lang):
         self.language = lang;
-        f = codecs.open("localize_" + self.language + ".json", "r", "utf-8")
+        f = codecs.open("localize.json", "r", "utf-8")
         if f:
             self.localize_strs = json.load(f)
             f.close()
@@ -25,12 +25,12 @@ class Localize():
     
     def str(self, key):
         if self.localize_strs and self.localize_strs.has_key(key):
-            return self.localize_strs[key].encode('utf-8')
+            return self.localize_strs[key][self.language].encode('utf-8')
         return '[Undefined String]'
     
     def str_name(self, key, name, host=""):
         if self.localize_strs and self.localize_strs.has_key(key):
-            ret_str = self.localize_strs[key].encode('utf-8').replace('NAME', name)
+            ret_str = self.localize_strs[key][self.language].encode('utf-8').replace('NAME', name)
             if host:
                 ret_str = ret_str.replace('HOST', host)
             return ret_str
