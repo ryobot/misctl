@@ -1,9 +1,11 @@
 {
+    "menu_index": { "en": "Top", "ja" : "トップページ" },
     "menu_config": { "en": "Config", "ja" : "設定" },
     "menu_iptables": { "en": "Firewall", "ja" : "ファイアウォール" },
     "menu_haproxy": { "en": "Load Balancer", "ja" : "ロードバランサ" },
     "menu_snort": { "en": "IDS", "ja" : "侵入検知" },
     "menu_squid": { "en": "Web Cache", "ja" : "Webキャッシュ" },
+    "index_title": { "en": "Webadmin Control Panels", "ja" : "Webadmin コントロール・パネル" },
     "config_title": { "en": "Webadmin Config", "ja" : "Webadmin 設定" },
     "haproxy_title": { "en": "Haproxy Control Panel", "ja" : "Haproxy コントロール・パネル" },
     "iptables_title": { "en": "iptables Control Panel", "ja" : "iptables コントロール・パネル" },

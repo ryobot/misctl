@@ -16,6 +16,7 @@ ServerName localhost:10080
     Options ExecCGI
     Order allow,deny 
     Allow from all       ### must be allowed only from the admin client
+    DirectoryIndex index.py
 </Directory>
 User webadmin
 Group webadmin
@@ -37,6 +38,6 @@ $ exit
 # chown -R webadmin:webadmin /var/www/html/webadmin
 # cd /var/www/html/webadmin
 # chmod 755 *_ctl.py
-# chmod 755 webadmin_config.py
+# chmod 755 webadmin_config.py index.py
 
 Then setup from http://[hostname]/webadmin_config.py

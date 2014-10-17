@@ -22,7 +22,7 @@ message = ""
 ## request params #########
 form = cgi.FieldStorage()
 req = {
-    'refresh':"0", 'service_action':"none" ,'y_scroll':"0", 'lang':"en", 'tab_id' : "0", 'host':"loclahost"
+    'refresh':"0", 'service_action':"none" ,'y_scroll':"0", 'lang':"en", 'tab_id' : "-99", 'host':"localhost"
 }
 for key in req.keys():
     if form.has_key(key):
