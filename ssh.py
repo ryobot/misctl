@@ -11,7 +11,7 @@ class Ssh():
         self.host = host
         
     def checkConnection(self):
-        com = "ssh -o BatchMode=yes root@" + self.host + " ls"
+        com = "ssh -o BatchMode=yes -o ConnectTimeout=10 root@" + self.host + " ls"
         ret_ch = commands.getstatusoutput(com)
         return (ret_ch[0], ret_ch[1])
     

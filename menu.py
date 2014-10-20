@@ -89,6 +89,8 @@ class Menu():
                     item.auth_check = "No route to host"
                 elif "Host key" in msg:
                     item.auth_check = "Not Authenticated"
+                elif "timed out" in msg:
+                    item.auth_check = "Connection timed out"
                 else:
                     item.auth_check = msg
                     

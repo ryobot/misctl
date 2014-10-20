@@ -52,7 +52,7 @@ Menu(req['tab_id'], loc).render()
 
 ### form (hidden params) #####
 params = { 
-    'refresh':req["refresh"], 'y_scroll':'0', 'tab_id': req['tab_id']
+    'refresh':req["refresh"], 'y_scroll':'0', 'tab_id': req['tab_id'], 'service_action': 'none', 'host': req['host']
 }
 HtmlForm("form1", "iptables_ctl.py", "POST", params).render()
 
@@ -89,14 +89,21 @@ if message:
 # service
 renderService(service, loc, "")
 
-stats = IptablesStats(service.getMessage())
-
 if service.state == "running":
+    
+    stats = IptablesStats(req['host'], service.getMessage())
+    
+    print("Interfaces")
+    print("<table>")
+    for iface in stats.interfaces:
+        print("<tr><td>" + iface.name + "</td><td>" + iface.subnet + "/" + str(iface.mask) + "</td><tr>")
+    print("</table>")
+    
     for tablename, table in stats.tables.items():
         renderVSpace(10)
         toggleDefault = "close"
-        if tablename == "filter":
-            toggleDefault = "open"
+        #if tablename == "filter":
+        #    toggleDefault = "open"
         renderToggleDivStart("table_" + tablename, "Table: " + tablename, form, toggleDefault)
         for chainname, chain in table.chains.items():
             print("<table class='notstripe'><tr><td>Chain: " + chainname + " policy " + chain.policy + "</td></tr>")

@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+from ssh import Ssh
+
 class iptables_rule(object):
     num = ""
     target = ""
@@ -16,13 +18,24 @@ class iptables_chain(object):
     
 class iptables_table(object):
     chains = {}
+    
+class interface(object):
+    name = ""
+    hwaddr = ""
+    subnet = ""
+    mask = ""
 
 ### class Stats ###############
 class IptablesStats():
     tables = {}
+    ssh = None
+    forward = {}
+    interfaces = []
 
-    def __init__(self,stat_str):
+    def __init__(self, host, stat_str):
+        self.ssh = Ssh(host)
         self.tables = self.getTables(stat_str)
+        self.getInterfaces()
 
     def isTableHeader(self,key):
         if key == "table:" or key == "Table:" or key == "テーブル:":
@@ -69,3 +82,51 @@ class IptablesStats():
                 tables[tablename].chains[chainname].rules.append(rule)
         return tables
 
+    def octet2int(self, ip):
+        intIp = []
+        for oct in ip.split('.'):
+            intIp.append(int(oct))
+        return intIp
+
+    def mask2Bits(self, mask):
+        intMask = self.octet2int(mask)
+        bits = 0
+        for i in range(0, len(intMask)):
+            binary = bin(intMask[i])
+            bits += len(binary.strip('0b'))
+        return bits
+    
+    def bits2Mask(self, bits):
+        b = bits
+        mask = ""
+        for i in range(0, 4):
+            if b >= 8:
+                val = 255
+            else:
+                x = 128
+                val = 0
+                for j in range(0, b):
+                    val += x
+                    x /= 2
+            mask += str(val)
+            if i < 3:
+                mask += "."
+            b -= 8
+        return mask
+    
+    def getInterfaces(self):
+        com = "route"
+        self.interfaces = []
+        (ret, content) = self.ssh.commandAsRoot(com)
+        if ret == 0:
+            lines = content.splitlines()
+            for line in lines:
+                columns = line.split()
+                if columns[0] in ['Kernel', 'Destination', 'link-local', 'default']:
+                    continue
+                if len(columns) == 8:
+                    iface = interface()
+                    iface.subnet = columns[0]
+                    iface.mask = self.mask2Bits(columns[2])
+                    iface.name = columns[7]
+                    self.interfaces.append(iface)

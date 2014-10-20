@@ -32,7 +32,7 @@ class Service():
         (ret, self.content) = self.ssh.commandAsRoot(com)
         if ret:
             self.state = self.getStatus()
-            return "cannot start " + self.name +":" + content
+            return "cannot start " + self.name +":" + self.content
         self.state = "running"
         return ""
         
@@ -41,7 +41,7 @@ class Service():
         (ret, self.content) = self.ssh.commandAsRoot(com)
         if ret:
             self.state = self.getStatus()
-            return "cannot stop " + self.name +":" + content
+            return "cannot stop " + self.name +":" + self.content
         self.state = "stopped"
         return ""
         
@@ -50,7 +50,7 @@ class Service():
         (ret, self.content) = self.ssh.commandAsRoot(com)
         if ret:
             self.state = self.getStatus()
-            return "cannot reload " + self.name +":" + content
+            return "cannot reload " + self.name +":" + self.content
         self.state = "running"
         return ""
     
