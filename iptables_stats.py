@@ -5,9 +5,13 @@ from ssh import Ssh
 
 class iptables_rule(object):
     num = ""
+    pkts = 0
+    bytes = 0
     target = ""
     prot = ""
     opt = ""
+    ifin = ""
+    ifout = ""
     source = ""
     destination = ""
     misc = ""
@@ -29,13 +33,14 @@ class interface(object):
 class IptablesStats():
     tables = {}
     ssh = None
-    forward = {}
+    forward_chain = None
     interfaces = []
 
     def __init__(self, host, stat_str):
         self.ssh = Ssh(host)
         self.tables = self.getTables(stat_str)
         self.getInterfaces()
+        self.forward_chain = self.getChain("FORWARD")
 
     def isTableHeader(self,key):
         if key == "table:" or key == "Table:" or key == "テーブル:":
@@ -130,3 +135,42 @@ class IptablesStats():
                     iface.mask = self.mask2Bits(columns[2])
                     iface.name = columns[7]
                     self.interfaces.append(iface)
+
+    def getChain(self, chain):
+        com = "iptables -vnx --line-numbers -L " + chain
+        chain = iptables_chain()
+        (ret, content) = self.ssh.commandAsRoot(com)
+        if ret == 0:
+            lines = content.splitlines()
+            for line in lines:
+                columns = line.strip().split()
+                if len(columns) == 0:
+                    continue
+                # label
+                if columns[0] == "num":
+                    continue
+                if columns[0] == "Chain":
+                    chain.policy = columns[3].strip("()")
+                    chain.rules = []
+                    continue
+                # the line must be a rule:
+                if len(columns) >= 6:
+                    rule = iptables_rule()
+                    rule.num = columns[0]
+                    rule.pkts = columns[1]
+                    rule.bytes = columns[2]
+                    rule.target = columns[3]
+                    rule.prot = columns[4]
+                    rule.opt = columns[5]
+                    rule.ifin = columns[6]
+                    rule.ifout = columns[7]
+                    rule.source = columns[8]
+                    rule.destination = columns[9]
+                    if len(columns) >= 11:
+                        for i in range(10, len(columns)):
+                            if rule.misc:
+                                rule.misc += " "
+                            rule.misc += columns[i]
+                    chain.rules.append(rule)
+        return chain
+        

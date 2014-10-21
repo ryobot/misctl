@@ -92,11 +92,33 @@ renderService(service, loc, "")
 if service.state == "running":
     
     stats = IptablesStats(req['host'], service.getMessage())
-    
+
+    # interfaces:
     print("Interfaces")
     print("<table>")
     for iface in stats.interfaces:
         print("<tr><td>" + iface.name + "</td><td>" + iface.subnet + "/" + str(iface.mask) + "</td><tr>")
+    print("</table>")
+    
+    # interfaces:
+    print("FORWARD chain : policy " + stats.forward_chain.policy)
+    print("<table>")
+    for rule in stats.forward_chain.rules:
+        print("<tr><td>" + rule.num + "</td>")
+        print("<td>" + str(rule.pkts) + "</td>")
+        print("<td>" + str(rule.bytes) + "</td>")
+        print("<td>" + rule.target + "</td>")
+        print("<td>" + rule.prot + "</td>")
+        print("<td>" + rule.opt + "</td>")
+        print("<td>" + rule.ifin + "</td>")
+        print("<td>" + rule.ifout + "</td>")
+        print("<td>" + rule.source + "</td>")
+        print("<td>" + rule.destination + "</td>")
+        if rule.misc:
+            print("<td>" + rule.misc + "</td>")
+        else:
+            print("<td>&nbsp;</td>")
+        print("</tr>")
     print("</table>")
     
     for tablename, table in stats.tables.items():
