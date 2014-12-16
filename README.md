@@ -1,10 +1,12 @@
-********************************************************
-misctl --- python cgi (with root ssh commands) ---
+# misctl
+python cgi (with root ssh commands)
 for iptables / haproxy / snort / squid ...
-********************************************************
 
-#### setup for CentOS6.4 ######
+## setup for CentOS6.4
 
+Setup web server etc
+
+```
 # yum install httpd expect
 # vi /etc/httpd/conf/httpd.conf
 ----
@@ -20,23 +22,34 @@ ServerName localhost:10080
 User webadmin
 Group webadmin
 ----
+```
+
+Create user webadmin
+
+```
 # groupadd webadmin
 # useradd webadmin -g webadmin
 # su webadmin
 $ cd
 $ ssh-keygen
 $ exit
+```
 
-*** copy ex_copy_id to /home/webadmin
+Copy ex_copy_id to /home/webadmin then,
 
+```
 # chown webadmin:webadmin /home/webadmin/ex_copy_id
 # chmod 755 /home/webadmin/ex_copy_id
+```
 
-*** copy other files to /var/www/html/webadmin
+Copy other files to /var/www/html/webadmin then,
 
+```
 # chown -R webadmin:webadmin /var/www/html/webadmin
 # cd /var/www/html/webadmin
 # chmod 755 *_ctl.py
 # chmod 755 webadmin_config.py
+```
 
-Then setup from http://[hostname]:10080/webadmin_config.py
+Do setup from http://[hostname]:10080/webadmin_config.py
+
