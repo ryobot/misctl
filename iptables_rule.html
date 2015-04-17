@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+<script type="text/javascript">
+
+   function addOption(select, optionName) {
+        var option = document.createElement('option');
+        option.value = optionName;
+        option.selected = false;
+        option.innerHTML = optionName;
+        select.appendChild(option);
+   }
+
+   function setSelected(options, value) {
+        for ( i = 0; i < options.length; i++ ) {
+             if ( options[i].value === value ) {
+                 options[i].selected = true;
+             }
+         }
+    }
+    
+   function setParams() {
+      params = window.dialogArguments;
+      document.getElementById("message").innerHTML = params['rule_id'];
+      var f = document.getElementById("params");
+      // id:
+      f.rule_id.value = params['rule_id'];
+      // interfaces:
+      for ( i = 0; i < params['interfaces'].length; i++ ) {
+          addOption(f.ifin, params['interfaces'][i]);
+          addOption(f.ifout, params['interfaces'][i]);
+      }
+      setSelected(f.target.options, params['target']);
+      setSelected(f.prot.options, params['prot']);
+      setSelected(f.ifin.options, params['ifin']);
+      f.source.value = params['source'];
+      f.sport.value = params['sport'];
+      setSelected(f.ifout.options, params['ifout']);
+      f.destination.value = params['destination'];
+      f.dport.value = params['dport'];
+   }
+
+   function replaceRule() {
+      f = document.getElementById("params");
+      f.command.value = "replace";
+      window.returnValue = f;
+      window.close();
+   }
+
+   function deleteRule() {
+      f = document.getElementById("params");
+      f.command.value = "delete";
+      window.returnValue = f;
+      window.close();
+   }
+
+   function insertRule() {
+      f = document.getElementById("params");
+      f.command.value = "insert";
+      window.returnValue = f;
+      window.close();
+   }
+
+   function cancel() {
+      window.close();
+   }
+   
+   function setFocus(id) {
+      var f = document.getElementById(id);
+      f.value = f.list.hidden;
+   }
+
+</script>
+<title>auth</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='STYLESHEET' href='webadmin.css' type='text/css'>
+</head>
+    <body onload="setParams()" style="background: #ccccee;">
+        <div id='header'>
+            Rule # <span id="message">Rule ID:</span>
+        </div>
+        <div id='outer'>
+        <div id='container'>
+
+        <form id="params" action="iptables_ctl.py" method="post"><table>
+                <tr><th>target</th><td colspan="3"><select name="target">
+                            <option value="ACCEPT">ACCEPT</option>
+                            <option value="REJECT">REJECT</option>
+                            <option value="DROP">DROP</option>
+                </select></td></tr>
+                <tr><th>protocol</th><td colspan="3"><select name="prot">
+                            <option value="all">all</option>
+                            <option value="tcp">tcp</option>
+                            <option value="udp">udp</option>
+                            <option value="icmp">icmp</option>
+                </select></td></tr>
+                <tr><th>source</th>
+                    <td>if : <select name="ifin">
+                        <option value="*">*</option>
+                    </select></td>
+                    <td>addr : <input name="source" value="" size="16"/></td>
+                    <td>port : <input id="input_sport" name="sport" value="" list ="ports" size="20" />
+                        <datalist id="ports">
+                            <option value="20">20(ftp)</option>
+                            <option value="21">21(ftp ctrl)</option>
+                            <option value="22">22(ssh)</option>
+                            <option value="25">25(smtp)</option>
+                            <option value="53">53(dns)</option>
+                            <option value="80">80(http)</option>
+                            <option value="88">88(kerberos)</option>
+                            <option value="110">110(pop3)</option>
+                            <option value="123">123(ntp)</option>
+                            <option value="143">143(imap)</option>
+                            <option value="161">161(snmp)</option>
+                            <option value="162">162(snmp trap)</option>
+                            <option value="389">389(ldap)</option>
+                            <option value="443">443(https)</option>
+                            <option value="514">514(syslog)</option>
+                            <option value="587">587(submission)</option>
+                            <option value="636">636(ldaps)</option>
+                            <option value="993">993(imaps)</option>
+                            <option value="995">995(pop3s)</option>
+                            <option value="1194">1194(OpenVPN)</option>
+                            <option value="3260">3260(iscsi)</option>
+                            <option value="3306">3306(MySQL)</option>
+                            <option value="3389">3389(RDP)</option>
+                            <option value="5432">5432(PostgreSQL)</option>
+                            <option value="5900">5900(vnc)</option>
+                            <option value="8009">8009(ajp)</option>
+                            <option value="8080">8080(tomcat)</option>
+                            <option value="9101">9101(bacula dir)</option>
+                            <option value="9102">9102(bacula fd)</option>
+                            <option value="9103">9103(bacula sd)</option>
+                            <option value="10050">10050(zabbix)</option>
+                            <option value="10051">10051(zabbix trap)</option>
+                        </datalist>
+                    </td>
+                </tr>
+                <tr><th>destination</th>
+                    <td>if : <select name="ifout">
+                            <option value="*">*</option>
+                    </select></td>
+                    <td>addr : <input name="destination" value="" size="16" /></td>
+                    <td>port : <input name="dport" value="" list ="ports" size="20" /></td>
+                </tr>
+        </table>
+                <input type="hidden" name="rule_id" value="0"/>
+                <input type="hidden" name="command" value=""/>
+        </form>
+        <div style="padding: 20px;">
+            <button onclick="replaceRule()">Replace</button>
+            <button onclick="deleteRule()">Delete</button>
+            <button onclick="insertRule()">Insert (before)</button>
+            <button onclick="cancel()">Cancel</button>
+        </div>
+            
+        </div></div>
+    </body>
+</html>
