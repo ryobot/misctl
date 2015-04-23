@@ -15,6 +15,9 @@ class iptables_rule(object):
     source = ""
     destination = ""
     misc = ""
+    dport = ""
+    sport = ""
+    state = ""
 
 class iptables_chain(object):
     policy = ""
@@ -129,7 +132,7 @@ class IptablesStats():
                 columns = line.split()
                 if columns[0] in ['Kernel', 'Destination', 'link-local', 'default']:
                     continue
-                if len(columns) == 8:
+                if len(columns) == 8 and columns[1] == "*":
                     iface = interface()
                     iface.subnet = columns[0]
                     iface.mask = self.mask2Bits(columns[2])
@@ -171,6 +174,14 @@ class IptablesStats():
                             if rule.misc:
                                 rule.misc += " "
                             rule.misc += columns[i]
+                            miscItem = columns[i].split(":")
+                            if len(miscItem) == 2:
+                                if miscItem[0] == "dpt":
+                                    rule.dport = miscItem[1]
+                                if miscItem[0] == "spt":
+                                    rule.sport = miscItem[1]
+                            if i > 10 and columns[i-1] == "state":
+                                rule.state = columns[i]
                     chain.rules.append(rule)
         return chain
         

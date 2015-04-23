@@ -14,6 +14,7 @@ from menu import Menu
 from localize_string import Localize
 
 from iptables_stats import IptablesStats
+from ssh import Ssh
 
 ## main
 
@@ -22,7 +23,8 @@ message = ""
 ## request params #########
 form = cgi.FieldStorage()
 req = {
-    'refresh':"0", 'service_action':"none" ,'y_scroll':"0", 'lang':"en", 'tab_id' : "-99", 'host':"localhost"
+    'refresh':"0", 'service_action':"none" ,'y_scroll':"0", 'lang':"en", 'tab_id' : "-99", 'host':"localhost", 'command':"",
+    'rule_id':"", 'target':"", 'prot':"", 'opt':"", 'ifin':"", 'ifout':"", 'source':"", 'sport':"", 'destination':"", 'dport':"", 'misc':"", 'state':""
 }
 for key in req.keys():
     if form.has_key(key):
@@ -41,18 +43,64 @@ if req["service_action"] == "start":
 if req["service_action"] == "reload":
     message += service.reload()
 
+if service.state == "running":
+    ### modify rules ###
+    if req['command']:
+        ssh = Ssh(req['host'])
+        if req['command'] == "replace":
+            com = "iptables -R FORWARD " + req['rule_id'] + " -j " + req['target']
+        if req['command'] == "insert":
+            com = "iptables -I FORWARD " + req['rule_id'] + " -j " + req['target']
+        if req['command'] == "add":
+            com = "iptables -A FORWARD " + " -j " + req['target']
+           
+        if req['command'] == "delete":
+            com = "iptables -D FORWARD " + req['rule_id']
+        else:
+            # protocol
+            if req['prot'] != "" and req['prot'] != "all":
+                com += " -p " + req['prot']
+            # input interface
+            if req['ifin'] != "" and req['ifin'] != "*":
+                com += " -i " + req['ifin']
+            # source
+            if req['source'] != "" and req['source'] != "0.0.0.0/0":
+                com += " -s " + req['source']
+            # output interface
+            if req['ifout'] != "" and req['ifout'] != "*":
+                com += " -o " + req['ifout']
+            # destination
+            if req['destination'] != "" and req['destination'] != "0.0.0.0/0":
+                com += " -d " + req['destination']
+            # sport
+            if req['sport'] != "":
+                com += " --sport " + req['sport']
+            # dport
+            if req['dport'] != "":
+                com += " --dport " + req['dport']
+            # state
+            if req['state'] != "":
+                com += " -m state --state " + req['state']
+            
+        # do command
+        (ret, msg) = ssh.commandAsRoot(com)
+        if ret != 0:
+            message += "iptables : " + msg
+        
 ### render html #####
 
 ### <html><head>--</head> ####
-renderHead(loc.str('menu_iptables'), "", "")
+renderHead(loc.str('menu_iptables'), "", "iptables.js")
 
 print("<body onLoad='setRefreshTimerAndScroll(" + req["refresh"] + "," + req["y_scroll"] + ")'>")
 
 Menu(req['tab_id'], loc).render()
 
 ### form (hidden params) #####
-params = { 
-    'refresh':req["refresh"], 'y_scroll':'0', 'tab_id': req['tab_id'], 'service_action': 'none', 'host': req['host']
+params = {
+    'refresh':req["refresh"], 'y_scroll':'0', 'tab_id': req['tab_id'], 'service_action': 'none', 'host': req['host'], 'command': req['command'],
+    'rule_id':req['rule_id'], 'target':req['target'], 'prot':req['prot'], 'opt':req['opt'], 'ifin':req['ifin'], 'ifout':req['ifout'], 'source':req['source'], 
+    'sport':req['sport'], 'destination':req['destination'], 'dport':req['dport'], 'misc':req['misc'], 'state':req['state']
 }
 HtmlForm("form1", "iptables_ctl.py", "POST", params).render()
 
@@ -98,15 +146,30 @@ if service.state == "running":
     print("<table>")
     for iface in stats.interfaces:
         print("<tr><td>" + iface.name + "</td><td>" + iface.subnet + "/" + str(iface.mask) + "</td><tr>")
+        print("<script language='javascript'>addInterface('" + iface.name + "');</script>")
     print("</table>")
     
-    # interfaces:
+    # rules (FORWARD):
     print("FORWARD chain : policy " + stats.forward_chain.policy)
     print("<table>")
+    
+    print("<tr>")
+    print("<th>#</th>")
+    print("<th>target</th>")
+    print("<th>prot</th>")
+    print("<th>opt.</th>")
+    print("<th>IF in</th>")
+    print("<th>IF out</th>")
+    print("<th>src</th>")
+    print("<th>dest</th>")
+    print("<th>conditions</th>")
+    print("<th>&nbsp;</th>")
+    print("</tr>")
+    
     for rule in stats.forward_chain.rules:
         print("<tr><td>" + rule.num + "</td>")
-        print("<td>" + str(rule.pkts) + "</td>")
-        print("<td>" + str(rule.bytes) + "</td>")
+        #print("<td>" + str(rule.pkts) + "</td>")
+        #print("<td>" + str(rule.bytes) + "</td>")
         print("<td>" + rule.target + "</td>")
         print("<td>" + rule.prot + "</td>")
         print("<td>" + rule.opt + "</td>")
@@ -118,7 +181,16 @@ if service.state == "running":
             print("<td>" + rule.misc + "</td>")
         else:
             print("<td>&nbsp;</td>")
+        # ruleOperation(rule_id, target, prot, ifin, ifout, source, destination, misc)
+        d = '", "'
+        params = ', "' + rule.target + d + rule.prot + d + rule.opt + d + rule.ifin + d + rule.ifout + '"'
+        params += ', "' + rule.source + d + rule.sport + d + rule.destination + d + rule.dport + d +rule.misc + d + rule.state + '"'
+        print("<td><div class='opr_button'><a href='javascript:ruleOperation(" + rule.num + params + ")'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></div></td>")
         print("</tr>")
+        
+    print("<tr><td colspan=9>&nbsp;</td>")
+    print("<td><div class='plus_button'><a href='javascript:ruleAdd(" + str(len(stats.forward_chain.rules)) + ")'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></div></td>")
+    print("</tr>")
     print("</table>")
     
     for tablename, table in stats.tables.items():

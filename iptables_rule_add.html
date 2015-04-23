@@ -12,7 +12,7 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel='STYLESHEET' href='webadmin.css' type='text/css'>
 </head>
-    <body onload="setParams()" style="background: #ccccee;">
+    <body onload="setParamsAdd()" style="background: #ccccee;">
         <div id='header'>
             Rule # <span id="message">Rule ID:</span>
         </div>
@@ -88,15 +88,16 @@ and open the template in the editor.
         </table>
                 <input type="hidden" name="rule_id" value="0"/>
                 <input type="hidden" name="command" value=""/>
-        </form>
         <div style="padding: 10px;">
             <table><tr>
             <td class="actions nobottom"><a href="javascript:cancel()">Cancel</a></td>
-            <td class="actions nobottom" id="delete_button"><a href="javascript:deleteRule()">Delete Rule</a></td>
-            <td class="actions nobottom" id="replace_button"><span class="disabled">Replace Rule</span></td>
-            <td class="actions nobottom" id="insert_button"><span class="disabled">Insert Rule</span></td>
+            <td class="actions nobottom" id="add_button">
+                at # <select name="new_rule_id"></select>
+                <a href="javascript:addRule()">Add Rule</a>
+            </td>
             </tr></table>
         </div>
+        </form>
             
         </div></div>
     </body>
