@@ -26,13 +26,21 @@ and open the template in the editor.
 <title>auth</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='STYLESHEET' href='webadmin.css' type='text/css'>
     </head>
     <body onload="setParams()" style="background: #ccccee;">
+        <div id='header'>
+            SSH認証
+        </div>
+        <div id='outer'>
+        <div id='container'>
+            
         <div style="padding: 20px;">
             <span id="message">Message:</span>
             <p><input type="password" id="passwd"/></p>
             <button onclick="returnParams()">OK</button>
             <button onclick="cancel()">Cancel</button>
         </div>
+        </div></div>
     </body>
 </html>

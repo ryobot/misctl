@@ -20,7 +20,7 @@ message = ""
 ## request params #########
 form = cgi.FieldStorage()
 req = {
-    'lang':"ja", 'tab_id' : "-99"
+    'lang':"ja", 'tab_id': "-99"
 }
 for key in req.keys():
     if form.has_key(key):
@@ -42,8 +42,8 @@ print("<body>")
 menu.render()
 
 ### form (hidden params) #####
-params = { 
-   'tab_id' : req['tab_id']
+params = {
+    'tab_id': req['tab_id']
 }
 HtmlForm("form1", "index.py", "POST", params).render()
 
@@ -67,16 +67,16 @@ if message:
     print message
     
 print("<table>")
-print("<tr><th width=200>" + loc.str("Service") + "</th><th width=200>" + loc.str("Application") + "</th><th width=200>" + loc.str("Host") + "</th></tr>" )
+print("<tr><th width=200>" + loc.str("Service") + "</th><th width=200>" + loc.str("Application") + "</th><th width=200>" + loc.str("Host") + "</th></tr>")
 for i in range(0, len(menu.items)):
     item = menu.items[i]
     print("<tr>")
     print("<td><a href='" + item.service + "_ctl.py?lang=" + loc.language + "&host=" + item.host + "&tab_id=" + str(i) + "' title='" + item.service + ":" + item.host + "'>" + item.label + "</td><td>" + item.service + "</td><td>" + item.host + "</td>")
-    print("</tr>" )
+    print("</tr>")
 if len(menu.items) == 0:
     print("<tr><td colspan=3>" + loc.str('no_cp_msg') + "</td></tr>")
 print("</table>")
-print("<a href='webadmin_config.py?lang=" + loc.language + "&tab_id=-1' >" +  loc.str('menu_config') + "</a>")
+print("<a href='webadmin_config.py?lang=" + loc.language + "&tab_id=-1' >" + loc.str('menu_config') + "</a>")
 
 print("</div>") #container
 print("</div>") #outer

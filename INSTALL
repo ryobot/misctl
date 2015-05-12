@@ -26,6 +26,7 @@ Group webadmin
 # su webadmin
 $ cd
 $ ssh-keygen
+$ touch misctl.conf
 $ exit
 
 *** copy ex_copy_id to /home/webadmin
@@ -39,5 +40,7 @@ $ exit
 # cd /var/www/html/webadmin
 # chmod 755 *_ctl.py
 # chmod 755 webadmin_config.py index.py
+
+# service httpd start
 
 Then setup from http://[hostname]/webadmin_config.py
