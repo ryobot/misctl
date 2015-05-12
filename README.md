@@ -32,6 +32,7 @@ Create user webadmin
 # su webadmin
 $ cd
 $ ssh-keygen
+$ touch misctl.conf
 $ exit
 ```
 
@@ -49,6 +50,9 @@ Copy other files to /var/www/html/webadmin then,
 # cd /var/www/html/webadmin
 # chmod 755 *_ctl.py
 # chmod 755 webadmin_config.py
+
+# service httpd start
+
 ```
 
 Do setup from http://[hostname]:10080/webadmin_config.py
