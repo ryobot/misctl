@@ -13,6 +13,8 @@ from html_parts import *
 from menu import Menu
 from localize_string import Localize
 
+import sys
+sys.path.append('iptables/')
 from iptables_stats import IptablesStats
 from ssh import Ssh
 
@@ -86,11 +88,15 @@ if service.state == "running":
         (ret, msg) = ssh.commandAsRoot(com)
         if ret != 0:
             message += "iptables : " + msg
+        else:
+            # redirect GET:
+            print ("Location: iptables_ctl.py?lang=" + req['lang'] + "&host=" + req['host'] + "&tab_id=" + req['tab_id'] + "\n\n")
+            exit(0)
         
 ### render html #####
 
 ### <html><head>--</head> ####
-renderHead(loc.str('menu_iptables'), "", "iptables.js")
+renderHead(loc.str('menu_iptables'), "", "iptables/iptables.js")
 
 print("<body onLoad='setRefreshTimerAndScroll(" + req["refresh"] + "," + req["y_scroll"] + ")'>")
 

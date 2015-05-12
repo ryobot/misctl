@@ -74,7 +74,7 @@ p {
 }
 
 #menu_header {
-                background: #dddce2 url("mCP30.png") no-repeat left;
+                background: #dddce2 url("img/mCP30.png") no-repeat left;
                 height: 30px;
                 padding: 0px 100px;
                 line-height: 30px;
@@ -477,12 +477,12 @@ input[type=submit]:active,
 .opr_button a {
     width: 30px;
     height: 30px;
-    background: url('icon_op.png') no-repeat;
+    background: url('img/icon_op.png') no-repeat;
     text-decoration: none;
     font-size: 16px;
 }
 .opr_button a:hover {
-    background: url('icon_op_over.png') no-repeat;
+    background: url('img/icon_op_over.png') no-repeat;
     text-decoration: none;
     font-size: 16px;
 }
@@ -491,12 +491,12 @@ input[type=submit]:active,
 .plus_button a {
     width: 30px;
     height: 30px;
-    background: url('icon_plus.png') no-repeat;
+    background: url('img/icon_plus.png') no-repeat;
     text-decoration: none;
     font-size: 16px;
 }
 .plus_button a:hover {
-    background: url('icon_plus_over.png') no-repeat;
+    background: url('img/icon_plus_over.png') no-repeat;
     text-decoration: none;
     font-size: 16px;
 }

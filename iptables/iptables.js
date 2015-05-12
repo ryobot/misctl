@@ -12,7 +12,7 @@ function ruleOperation(rule_id, target, prot, opt, ifin, ifout, source, sport, d
     var params = { rule_id:rule_id,  target:target, prot:prot, opt:opt, ifin:ifin, ifout:ifout, 
                              source:source, sport:sport, destination:destination, dport:dport, 
                              misc:misc, state:state, interfaces:interfaces };
-    var fprm = window.showModalDialog("iptables_rule.html", params, options);
+    var fprm = window.showModalDialog("iptables/iptables_rule.html", params, options);
     if ( fprm.command.value  !== "" ) {
         f = document.getElementById('form1');
         f.command.value = fprm.command.value;
@@ -36,7 +36,7 @@ function ruleAdd(num_rules)
     var params = { rule_id:"new",  target:"REJECT", prot:"all", opt:"", ifin:"*", ifout:"*", 
                              source:"0.0.0.0/0", sport:"", destination:"0.0.0.0/0", dport:"", 
                              misc:"", state:"", interfaces:interfaces, num_rules:num_rules };
-    var fprm = window.showModalDialog("iptables_rule_add.html", params, options);
+    var fprm = window.showModalDialog("iptables/iptables_rule_add.html", params, options);
     if ( fprm.command.value  !== "" ) {
         f = document.getElementById('form1');
         f.command.value = fprm.command.value;
