@@ -38,22 +38,26 @@ class IptablesStats():
     ssh = None
     forward_chain = None
     interfaces = []
+    message = ""
 
     def __init__(self, host, stat_str):
         self.ssh = Ssh(host)
         self.tables = self.getTables(stat_str)
         self.getInterfaces()
         self.forward_chain = self.getChain("FORWARD")
-
+        
     def isTableHeader(self,key):
         if key == "table:" or key == "Table:" or key == "テーブル:":
             return True
         return False
     
+    def getMessage(self):
+        return self.message;
+    
     def getTables(self,stat_str):
         lines = stat_str.splitlines()
         tables = {}
-        tablename = ""
+        tablename = "none"
         chainname = ""
         for line in lines:
             columns = line.strip().split()
@@ -123,21 +127,22 @@ class IptablesStats():
         return mask
     
     def getInterfaces(self):
-        com = "route"
+        com = "ip route"
         self.interfaces = []
         (ret, content) = self.ssh.commandAsRoot(com)
         if ret == 0:
+            self.message = content
             lines = content.splitlines()
             for line in lines:
                 columns = line.split()
-                if columns[0] in ['Kernel', 'Destination', 'link-local', 'default']:
+                if columns[0] == 'default':
                     continue
-                if len(columns) == 8 and columns[1] == "*":
-                    iface = interface()
-                    iface.subnet = columns[0]
-                    iface.mask = self.mask2Bits(columns[2])
-                    iface.name = columns[7]
-                    self.interfaces.append(iface)
+                iface = interface()
+                sn = columns[0].split('/')
+                iface.subnet = sn[0]
+                iface.mask = sn[1]
+                iface.name = columns[2]
+                self.interfaces.append(iface)
 
     def getChain(self, chain):
         com = "iptables -vnx --line-numbers -L " + chain

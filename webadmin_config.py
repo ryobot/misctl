@@ -117,6 +117,7 @@ print("<option value='iptables'>" + loc.str("menu_iptables") + "(iptables)</opti
 print("<option value='haproxy'>" + loc.str("menu_haproxy") + "(haproxy)</option>")
 print("<option value='snort'>" + loc.str("menu_snort") + "(snort)</option>")
 print("<option value='squid'>" + loc.str("menu_squid") + "(squid)</option>")
+print("<option value='remote'>" + loc.str("menu_cmd") + "(remote cmd)</option>")
 print("</select></td></tr>")
 print("<tr><th>" + loc.str("Host") + "</th><td><input type='text' name='host' size=20></td></tr>")
 print("<tr><td class='actions' style='border: 0px; text-align: left;'><a href='javascript:addService()'>" + loc.str('btn_add') + "</a></td></tr>")

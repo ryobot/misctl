@@ -146,6 +146,7 @@ renderService(service, loc, "")
 if service.state == "running":
     
     stats = IptablesStats(req['host'], service.getMessage())
+    #print(stats.getMessage() + "<br>")
 
     # interfaces:
     print("Interfaces")
@@ -154,11 +155,11 @@ if service.state == "running":
         print("<tr><td>" + iface.name + "</td><td>" + iface.subnet + "/" + str(iface.mask) + "</td><tr>")
         print("<script language='javascript'>addInterface('" + iface.name + "');</script>")
     print("</table>")
-    
+
     # rules (FORWARD):
     print("FORWARD chain : policy " + stats.forward_chain.policy)
     print("<table>")
-    
+
     print("<tr>")
     print("<th>#</th>")
     print("<th>target</th>")
@@ -171,7 +172,7 @@ if service.state == "running":
     print("<th>conditions</th>")
     print("<th>&nbsp;</th>")
     print("</tr>")
-    
+
     for rule in stats.forward_chain.rules:
         print("<tr><td>" + rule.num + "</td>")
         #print("<td>" + str(rule.pkts) + "</td>")
@@ -193,12 +194,12 @@ if service.state == "running":
         params += ', "' + rule.source + d + rule.sport + d + rule.destination + d + rule.dport + d +rule.misc + d + rule.state + '"'
         print("<td><div class='opr_button'><a href='javascript:ruleOperation(" + rule.num + params + ")'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></div></td>")
         print("</tr>")
-        
+
     print("<tr><td colspan=9>&nbsp;</td>")
     print("<td><div class='plus_button'><a href='javascript:ruleAdd(" + str(len(stats.forward_chain.rules)) + ")'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></div></td>")
     print("</tr>")
     print("</table>")
-    
+
     for tablename, table in stats.tables.items():
         renderVSpace(10)
         toggleDefault = "close"
